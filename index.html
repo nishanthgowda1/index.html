@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        header h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        header p {
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        main {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .generator-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 450px;
+            padding: 30px;
+            flex: 1;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #6a11cb;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        #generateBtn {
+            background-color: #6a11cb;
+            color: white;
+        }
+        
+        #generateBtn:hover {
+            background-color: #5a0fb8;
+            transform: translateY(-2px);
+        }
+        
+        #downloadBtn {
+            background-color: #2575fc;
+            color: white;
+            display: none;
+        }
+        
+        #downloadBtn:hover {
+            background-color: #1c67e3;
+            transform: translateY(-2px);
+        }
+        
+        #qrCode {
+            margin: 20px 0;
+            min-height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .info-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 450px;
+            padding: 30px;
+            flex: 1;
+        }
+        
+        .instructions {
+            margin-bottom: 30px;
+        }
+        
+        .instructions h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+            color: #666;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .uses {
+            margin-top: 30px;
+        }
+        
+        .uses h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .uses ul {
+            padding-left: 20px;
+            color: #666;
+        }
+        
+        .uses li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        footer {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            margin-top: auto;
+        }
+        
+        footer p {
+            color: #666;
+        }
+        
+        @media (max-width: 968px) {
+            main {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .generator-container, .info-container {
+                max-width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .generator-container, .info-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>QR Code Generator</h1>
+        <p>Create custom QR codes for URLs, contact information, Wi-Fi credentials, and more - completely free and without registration!</p>
+    </header>
+    
+    <main>
+        <section class="generator-container">
+            <div class="input-group">
+                <input type="text" id="urlInput" placeholder="Enter URL or text here...">
+            </div>
+            
+            <div class="button-group">
+                <button id="generateBtn">Generate QR Code</button>
+                <button id="downloadBtn">Download QR Code</button>
+            </div>
+            
+            <div id="qrCode">
+                <p>Your QR code will appear here</p>
+            </div>
+        </section>
+        
+        <section class="info-container">
+            <div class="instructions">
+                <h3>How to use:</h3>
+                <ol>
+                    <li>Enter a URL or any text in the input field</li>
+                    <li>Click "Generate QR Code" to create your QR code</li>
+                    <li>Click "Download QR Code" to save it as a PNG image</li>
+                    <li>Scan the QR code with any smartphone camera or QR code reader app</li>
+                </ol>
+            </div>
+            
+            <div class="uses">
+                <h3>QR Code Uses:</h3>
+                <ul>
+                    <li>Share website links quickly</li>
+                    <li>Connect to Wi-Fi without typing passwords</li>
+                    <li>Share contact information</li>
+                    <li>Promote your business or social media</li>
+                    <li>Make payment requests</li>
+                    <li>Event tickets and boarding passes</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>© 2023 QR Code Generator | All Rights Reserved</p>
+    </footer>
+
+    <script>
+        // Get references to HTML elements
+        const generateBtn = document.getElementById('generateBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const urlInput = document.getElementById('urlInput');
+        const qrCodeContainer = document.getElementById('qrCode');
+        
+        // Store the QR code data URL for downloading
+        let qrCodeDataUrl = '';
+        
+        // Event listener for QR Code generation
+        generateBtn.addEventListener('click', function() {
+            const url = urlInput.value.trim(); // Get the value entered in the input field
+            
+            // Check if the input is empty
+            if (!url) {
+                alert('Please enter a URL or text!');
+                return;
+            }
+            
+            // Clear any existing QR code
+            qrCodeContainer.innerHTML = '';
+            downloadBtn.style.display = 'none'; // Hide download button until QR code is ready
+            
+            // Show loading state
+            const loadingText = document.createElement('p');
+            loadingText.textContent = 'Generating QR code...';
+            qrCodeContainer.appendChild(loadingText);
+            
+            // Generate QR code using the QRCode.js library
+            QRCode.toDataURL(url, { width: 200, margin: 1 }, function(error, url) {
+                if (error) {
+                    console.error(error);
+                    alert('Error generating QR code');
+                    return;
+                }
+                
+                // Clear loading state
+                qrCodeContainer.innerHTML = '';
+                
+                // Create and display the QR code image
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = 'QR Code';
+                qrCodeContainer.appendChild(img);
+                
+                // Store the data URL for downloading
+                qrCodeDataUrl = url;
+                
+                // Show the download button
+                downloadBtn.style.display = 'inline-block';
+            });
+        });
+        
+        // Event listener for downloading the QR code
+        downloadBtn.addEventListener('click', function() {
+            if (!qrCodeDataUrl) {
+                alert('Please generate a QR code first!');
+                return;
+            }
+            
+            // Create a temporary link for downloading
+            const link = document.createElement('a');
+            link.href = qrCodeDataUrl;
+            link.download = 'qrcode.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+        
+        // Allow generating QR code by pressing Enter key
+        urlInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>
